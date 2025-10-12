@@ -1,0 +1,44 @@
+.
+├── App.vue
+├── api
+│   ├── core
+│   │   ├── ApiError.ts
+│   │   ├── ApiRequestOptions.ts
+│   │   ├── ApiResult.ts
+│   │   ├── CancelablePromise.ts
+│   │   ├── OpenAPI.ts
+│   │   └── request.ts
+│   ├── index.ts
+│   ├── schemas.gen.ts
+│   ├── sdk.gen.ts
+│   └── types.gen.ts
+├── assets
+│   ├── base.css
+│   ├── logo.svg
+│   └── main.css
+├── components
+│   ├── HelloWorld.vue
+│   ├── TheWelcome.vue
+│   ├── WelcomeItem.vue
+│   └── icons
+│       ├── IconCommunity.vue
+│       ├── IconDocumentation.vue
+│       ├── IconEcosystem.vue
+│       ├── IconSupport.vue
+│       └── IconTooling.vue
+├── composables
+│   └── useAuth.ts
+├── main.ts
+├── reference_structure.md
+├── router
+│   └── index.ts
+├── stores
+│   └── counter.ts
+├── test
+├── utils.ts
+└── views
+    ├── AboutView.vue
+    ├── HomeView.vue
+    └── LoginView.vue
+
+10 directories, 32 files
