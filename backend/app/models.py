@@ -68,11 +68,10 @@ class ItemsPublic(SQLModel):
     count: int
 
 
-# Note: Transaction, Income, Expense, and CardStatement models have been moved to their respective domain modules
+# Note: CardStatement models have been moved to the card_statements domain module
 # See:
-# - app.domains.expenses_transactions.domain.models
-# - app.domains.income_transactions.domain.models
 # - app.domains.card_statements.domain.models
+
 
 # Generic message
 class Message(SQLModel):

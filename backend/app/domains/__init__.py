@@ -1,19 +1,15 @@
 """Domain-driven architecture for FindDash backend.
 
-This module serves as a simple entry point to the domain-driven architecture.  
+This module serves as a simple entry point to the domain-driven architecture.
 Users should import directly from the specific domain modules they need:
 
-- app.domains.income_transactions.domain: Income domain models and errors
-- app.domains.income_transactions.repository: Income repository
-- app.domains.income_transactions.service: Income service
+- app.domains.users.domain: User domain models and errors
+- app.domains.users.repository: User repository
+- app.domains.users.service: User service
 
-- app.domains.expenses_transactions.domain: Expense domain models and errors
-- app.domains.expenses_transactions.repository: Expense repository
-- app.domains.expenses_transactions.service: Expense service
-
-- app.domains.accounts.domain: Account domain models and errors
-- app.domains.accounts.repository: Account repository
-- app.domains.accounts.service: Account service
+- app.domains.card_statements.domain: Card statement domain models and errors
+- app.domains.card_statements.repository: Card statement repository
+- app.domains.card_statements.service: Card statement service
 
 Each repository and service module provides a `Provide()` function that returns
 an idempotent instance with all dependencies resolved.
