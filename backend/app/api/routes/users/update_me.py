@@ -7,7 +7,7 @@ from fastapi import APIRouter, HTTPException
 from app.api.deps import CurrentUser
 from app.domains.users.domain.errors import DuplicateUserError
 from app.domains.users.domain.models import UserPublic, UserUpdateMe
-from app.domains.users.usecases import provide_update_user
+from app.domains.users.usecases.update_user import provide as provide_update_user
 
 router = APIRouter()
 

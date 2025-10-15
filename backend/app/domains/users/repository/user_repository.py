@@ -2,12 +2,11 @@
 
 import uuid
 from functools import lru_cache
-from typing import Any
 
 from sqlmodel import Session, func, select
 from sqlmodel.sql.expression import SelectOfScalar
 
-from app.core.security import get_password_hash, verify_password
+from app.core.security import get_password_hash
 from app.domains.users.domain.errors import UserNotFoundError
 from app.domains.users.domain.models import User, UserCreate, UserUpdate
 from app.domains.users.domain.options import SearchOptions, SortOrder
@@ -67,56 +66,6 @@ class UserRepository:
         statement = select(User).where(User.email == email)
         return self.db_session.exec(statement).first()
 
-    def list(
-        self, skip: int = 0, limit: int = 100, filters: dict[str, Any] | None = None
-    ) -> list[User]:
-        """List users with pagination and filtering.
-
-        Args:
-            skip: Number of records to skip
-            limit: Maximum number of records to return
-            filters: Optional filters to apply
-
-        Returns:
-            list[User]: List of users
-        """
-        query = select(User)
-
-        if filters:
-            for field, value in filters.items():
-                if hasattr(User, field):
-                    query = query.where(getattr(User, field) == value)
-
-        result = self.db_session.exec(query.offset(skip).limit(limit))
-        return list(result)
-
-    def count(self, filters: dict[str, Any] | None = None) -> int:
-        """Count users with optional filtering.
-
-        Args:
-            filters: Optional filters to apply
-
-        Returns:
-            int: Number of users matching the filters
-        """
-        query: SelectOfScalar[User] = select(User)
-
-        if filters:
-            for field, value in filters.items():
-                if hasattr(User, field):
-                    query = query.where(getattr(User, field) == value)
-
-        count_q = (
-            query.with_only_columns(func.count())
-            .order_by(None)
-            .select_from(query.get_final_froms()[0])
-        )
-
-        result = self.db_session.exec(count_q)
-        for count in result:
-            return count  # type: ignore
-        return 0
-
     def update(self, user_id: uuid.UUID, user_data: UserUpdate) -> User:
         """Update a user.
 
@@ -140,7 +89,7 @@ class UserRepository:
             hashed_password = get_password_hash(password)
             extra_data["hashed_password"] = hashed_password
 
-        db_user.sqlmodel_update(user_dict, update=extra_data)
+        db_user.sqlmodel_update(user_dict, update=extra_data)  # pyright: ignore[reportUnknownArgumentType]
         self.db_session.add(db_user)
         self.db_session.commit()
         self.db_session.refresh(db_user)
@@ -253,27 +202,10 @@ class UserRepository:
             .select_from(query.get_final_froms()[0])
         )
 
-        result = self.db_session.exec(count_q)
-        for count in result:
+        result = self.db_session.exec(count_q)  # type: ignore
+        for count in result:  # type: ignore
             return count  # type: ignore
         return 0
-
-    def authenticate(self, email: str, password: str) -> User | None:
-        """Authenticate a user by email and password.
-
-        Args:
-            email: The user email
-            password: The user password
-
-        Returns:
-            User | None: The user if authentication successful, None otherwise
-        """
-        db_user = self.get_by_email(email=email)
-        if not db_user:
-            return None
-        if not verify_password(password, db_user.hashed_password):
-            return None
-        return db_user
 
 
 @lru_cache

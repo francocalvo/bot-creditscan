@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.api.deps import get_current_active_superuser
 from app.domains.users.domain.errors import DuplicateUserError, UserNotFoundError
 from app.domains.users.domain.models import UserPublic, UserUpdate
-from app.domains.users.usecases import provide_update_user
+from app.domains.users.usecases.update_user import provide as provide_update_user
 
 router = APIRouter()
 

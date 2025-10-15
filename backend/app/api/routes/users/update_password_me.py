@@ -10,7 +10,9 @@ from app.domains.users.domain.errors import (
     InvalidUserDataError,
 )
 from app.domains.users.domain.models import UpdatePassword
-from app.domains.users.usecases import provide_update_password
+from app.domains.users.usecases.update_password import (
+    provide as provide_update_password,
+)
 from app.models import Message
 
 router = APIRouter()

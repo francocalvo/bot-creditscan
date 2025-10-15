@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.api.deps import get_current_active_superuser
 from app.domains.users.domain.errors import DuplicateUserError
 from app.domains.users.domain.models import UserCreate, UserPublic
-from app.domains.users.usecases import provide_create_user
+from app.domains.users.usecases.create_user import provide as provide_create_user
 
 router = APIRouter()
 

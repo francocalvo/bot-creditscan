@@ -2,8 +2,8 @@
 
 import uuid
 from functools import lru_cache
-from typing import Any
 
+from app.core.security import verify_password
 from app.domains.users.domain.models import (
     UserCreate,
     UserPublic,
@@ -62,27 +62,6 @@ class UserService:
         if user:
             return UserPublic.model_validate(user)
         return None
-
-    def list_users(
-        self, skip: int = 0, limit: int = 100, filters: dict[str, Any] | None = None
-    ) -> UsersPublic:
-        """List users with pagination and filtering.
-
-        Args:
-            skip: Number of records to skip
-            limit: Maximum number of records to return
-            filters: Optional filters to apply
-
-        Returns:
-            UsersPublic: Paginated users data
-        """
-        users = self.user_repository.list(skip=skip, limit=limit, filters=filters)
-        count = self.user_repository.count(filters=filters)
-
-        return UsersPublic(
-            data=[UserPublic.model_validate(user) for user in users],
-            count=count,
-        )
 
     def update_user(self, user_id: uuid.UUID, user_data: UserUpdate) -> UserPublic:
         """Update a user.
@@ -152,8 +131,9 @@ class UserService:
         Returns:
             UserPublic | None: The user if authentication successful, None otherwise
         """
-        user = self.user_repository.authenticate(email, password)
-        if user:
+        user = self.user_repository.get_by_email(email)
+
+        if user and verify_password(password, user.hashed_password):
             return UserPublic.model_validate(user)
         return None
 

@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException
 
 from app.domains.users.domain.errors import DuplicateUserError
 from app.domains.users.domain.models import UserPublic, UserRegister
-from app.domains.users.usecases import provide_register_user
+from app.domains.users.usecases.register_user import provide as provide_register_user
 
 router = APIRouter()
 

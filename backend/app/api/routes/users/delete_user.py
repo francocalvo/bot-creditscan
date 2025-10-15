@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from app.api.deps import CurrentUser, get_current_active_superuser
 from app.domains.users.domain.errors import InvalidUserDataError, UserNotFoundError
-from app.domains.users.usecases import provide_delete_user
+from app.domains.users.usecases.delete_user import provide as provide_delete_user
 from app.models import Message
 
 router = APIRouter()
