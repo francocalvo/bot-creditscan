@@ -15,7 +15,7 @@ const isAuthPage = computed(() => {
 
 <template>
   <div class="app-container" :class="{ 'auth-page': isAuthPage }">
-    <div class="theme-toggle">
+    <div v-if="isAuthPage" class="theme-toggle">
       <Button icon="pi pi-moon" @click="toggleDarkMode()" class="p-button-rounded p-button-text" aria-label="Toggle Dark Mode" />
     </div>
       <RouterView />

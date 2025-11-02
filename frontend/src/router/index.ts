@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
 import { useAuthStore } from '../stores/auth'
 
 // Import layouts
@@ -69,22 +68,16 @@ const router = createRouter({
       ],
     },
     {
-      path: '/auth',
+      path: '/auth/login',
+      name: 'login',
       component: AuthLayout,
-      children: [
-        {
-          path: 'login',
-          name: 'login',
-          component: LoginView,
-          meta: { guest: true },
-        },
-        {
-          path: 'signup',
-          name: 'signup',
-          component: () => import('../views/SignUpView.vue'),
-          meta: { guest: true },
-        },
-      ]
+      meta: { guest: true },
+    },
+    {
+      path: '/auth/signup',
+      name: 'signup',
+      component: AuthLayout,
+      meta: { guest: true },
     },
   ],
 })
