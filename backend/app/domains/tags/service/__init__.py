@@ -1,7 +1,8 @@
 """Tag service."""
 
-from .tag_service import TagService
+from .tag_service import TagService, provide
 
 __all__ = [
     "TagService",
+    "provide",
 ]

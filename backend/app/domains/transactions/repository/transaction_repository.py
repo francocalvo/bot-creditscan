@@ -68,8 +68,8 @@ class TransactionRepository:
             .select_from(query.get_final_froms()[0])
         )
 
-        result = self.db_session.exec(count_q)
-        for count in result:
+        result = self.db_session.exec(count_q)  # type: ignore
+        for count in result:  # type: ignore
             return count  # type: ignore
         return 0
 

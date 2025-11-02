@@ -5,7 +5,7 @@ from datetime import date
 from decimal import Decimal
 
 from sqlalchemy import DECIMAL, Column
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel  # type: ignore
 
 
 # Base model with shared properties

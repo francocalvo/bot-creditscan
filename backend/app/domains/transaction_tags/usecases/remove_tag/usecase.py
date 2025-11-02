@@ -3,9 +3,7 @@
 import uuid
 
 from app.domains.transaction_tags.service import TransactionTagService
-from app.domains.transaction_tags.service.transaction_tag_service import (
-    provide as provide_service,
-)
+from app.domains.transaction_tags.service import provide as provide_service
 
 
 class RemoveTagFromTransactionUseCase:

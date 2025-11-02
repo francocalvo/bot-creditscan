@@ -51,7 +51,7 @@ def send_email(
         smtp_options["user"] = settings.SMTP_USER
     if settings.SMTP_PASSWORD:
         smtp_options["password"] = settings.SMTP_PASSWORD
-    response = message.send(to=email_to, smtp=smtp_options)
+    response = message.send(to=email_to, smtp=smtp_options)  # type: ignore
     logger.info(f"send email result: {response}")
 
 
