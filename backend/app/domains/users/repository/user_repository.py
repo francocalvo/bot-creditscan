@@ -1,7 +1,6 @@
 """User repository implementation."""
 
 import uuid
-from functools import lru_cache
 
 from sqlmodel import Session, func, select
 from sqlmodel.sql.expression import SelectOfScalar
@@ -208,11 +207,15 @@ class UserRepository:
         return 0
 
 
-@lru_cache
-def provide() -> UserRepository:
+def provide(db_session: Session | None = None) -> UserRepository:
     """Provide an instance of UserRepository.
+
+    Args:
+        db_session: Optional database session to use. If not provided,
+                   creates a new session using the global engine.
 
     Returns:
         UserRepository: An instance of UserRepository with a database session.
     """
-    return UserRepository(get_db_session())
+    session = db_session if db_session is not None else get_db_session()
+    return UserRepository(session)

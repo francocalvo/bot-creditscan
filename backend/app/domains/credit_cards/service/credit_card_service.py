@@ -1,7 +1,6 @@
 """Credit card service implementation."""
 
 import uuid
-from functools import lru_cache
 from typing import Any
 
 from app.domains.credit_cards.domain.models import (
@@ -56,9 +55,13 @@ class CreditCardService:
         self.repository.delete(card_id)
 
 
-@lru_cache
-def provide() -> CreditCardService:
-    """Provide an instance of CreditCardService."""
+def provide(repository: "CreditCardRepository | None" = None) -> CreditCardService:
+    """Provide an instance of CreditCardService.
+
+    Args:
+        repository: Optional repository to use.
+    """
     from app.domains.credit_cards.repository import provide as provide_repository
 
-    return CreditCardService(provide_repository())
+    repo = repository if repository is not None else provide_repository()
+    return CreditCardService(repo)

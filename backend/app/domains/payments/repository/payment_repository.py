@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import uuid
 from decimal import Decimal
-from functools import lru_cache
 from typing import Any
 
 from sqlmodel import Session, func, select
@@ -103,7 +102,11 @@ class PaymentRepository:
         return total if total is not None else Decimal("0")
 
 
-@lru_cache
-def provide() -> PaymentRepository:
-    """Provide an instance of PaymentRepository."""
-    return PaymentRepository(get_db_session())
+def provide(db_session: Session | None = None) -> PaymentRepository:
+    """Provide an instance of PaymentRepository.
+
+    Args:
+        db_session: Optional database session to use.
+    """
+    session = db_session if db_session is not None else get_db_session()
+    return PaymentRepository(session)

@@ -10,7 +10,7 @@ from app.core import security
 from app.core.config import settings
 from app.core.security import get_password_hash
 from app.domains.users.service import provide as provide_user_service
-from app.models import Message, NewPassword, Token, UserPublic
+from app.models import Message, NewPassword, Token, User, UserPublic
 from app.utils import (
     generate_password_reset_token,
     generate_reset_password_email,
@@ -89,8 +89,11 @@ def reset_password(session: SessionDep, body: NewPassword) -> Message:
     if not email:
         raise HTTPException(status_code=400, detail="Invalid token")
 
-    auth_user_service = provide_user_service()
-    user = auth_user_service.get_user_by_email(email)
+    # We need the *DB model* here (not the public DTO), because we must update
+    # hashed_password and persist it.
+    from sqlmodel import select
+
+    user = session.exec(select(User).where(User.email == email)).first()
 
     if not user:
         raise HTTPException(
@@ -99,6 +102,7 @@ def reset_password(session: SessionDep, body: NewPassword) -> Message:
         )
     elif not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
+
     hashed_password = get_password_hash(password=body.new_password)
     user.hashed_password = hashed_password
     session.add(user)
