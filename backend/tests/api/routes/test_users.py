@@ -1,6 +1,7 @@
 import uuid
 from unittest.mock import patch
 
+from tests.utils.utils import random_email, random_lower_string
 from fastapi.testclient import TestClient
 from sqlmodel import Session, select
 

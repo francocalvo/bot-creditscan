@@ -1,7 +1,9 @@
 from sqlalchemy.pool import StaticPool
 from sqlmodel import SQLModel, create_engine
 
-from app.tests_pre_start import init
+from sqlmodel import select
+
+from tests_pre_start import init, logger
 
 
 def test_init_successful_connection() -> None:
