@@ -1,4 +1,4 @@
-from app.tests.utils.utils import random_email, random_lower_string
+from tests.utils.utils import random_email, random_lower_string
 from fastapi.encoders import jsonable_encoder
 from sqlmodel import Session
 

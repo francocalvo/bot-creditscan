@@ -1,8 +1,8 @@
 from collections.abc import Generator
 
 import pytest
-from app.tests.utils.user import authentication_token_from_email
-from app.tests.utils.utils import get_superuser_token_headers
+from tests.utils.user import authentication_token_from_email
+from tests.utils.utils import get_superuser_token_headers
 from fastapi.testclient import TestClient
 from sqlmodel import Session, delete
 

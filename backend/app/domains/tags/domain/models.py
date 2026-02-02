@@ -21,6 +21,22 @@ class TagCreate(TagBase):
     pass
 
 
+# API input model for creating tags (user_id set server-side for normal users)
+class TagCreateIn(SQLModel):
+    """API input model for creating tags.
+
+    For non-superusers, ``user_id`` is ignored and always set server-side.
+    For superusers, ``user_id`` may be provided to create a tag for another user.
+    """
+
+    label: str = Field(max_length=200)
+    user_id: uuid.UUID | None = None
+
+    def to_create(self, user_id: uuid.UUID) -> TagCreate:
+        """Convert to TagCreate with server-side user_id."""
+        return TagCreate(user_id=user_id, label=self.label)
+
+
 # Database table model
 class Tag(TagBase, table=True):
     """Database model for tags."""

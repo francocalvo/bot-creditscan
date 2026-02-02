@@ -1,8 +1,8 @@
 from unittest.mock import patch
 
 from app.crud import create_user
-from app.tests.utils.user import user_authentication_headers
-from app.tests.utils.utils import random_email, random_lower_string
+from tests.utils.user import user_authentication_headers
+from tests.utils.utils import random_email, random_lower_string
 from fastapi.testclient import TestClient
 from sqlmodel import Session
 

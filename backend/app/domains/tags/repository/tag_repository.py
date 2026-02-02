@@ -1,7 +1,6 @@
 """Tag repository implementation."""
 
 import uuid
-from functools import lru_cache
 from typing import Any
 
 from sqlmodel import Session, func, select
@@ -87,7 +86,6 @@ class TagRepository:
         self.db_session.commit()
 
 
-@lru_cache
 def provide() -> TagRepository:
     """Provide an instance of TagRepository."""
     return TagRepository(get_db_session())
