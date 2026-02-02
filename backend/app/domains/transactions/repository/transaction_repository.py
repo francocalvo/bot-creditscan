@@ -1,7 +1,6 @@
 """Transaction repository implementation."""
 
 import uuid
-from functools import lru_cache
 from typing import Any
 
 from sqlmodel import Session, func, select
@@ -97,7 +96,11 @@ class TransactionRepository:
         self.db_session.commit()
 
 
-@lru_cache
-def provide() -> TransactionRepository:
-    """Provide an instance of TransactionRepository."""
-    return TransactionRepository(get_db_session())
+def provide(db_session: Session | None = None) -> TransactionRepository:
+    """Provide an instance of TransactionRepository.
+
+    Args:
+        db_session: Optional database session to use.
+    """
+    session = db_session if db_session is not None else get_db_session()
+    return TransactionRepository(session)

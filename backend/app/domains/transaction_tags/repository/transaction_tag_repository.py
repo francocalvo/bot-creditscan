@@ -1,7 +1,6 @@
 """Transaction tag repository implementation."""
 
 import uuid
-from functools import lru_cache
 
 from sqlmodel import Session, select
 
@@ -66,7 +65,11 @@ class TransactionTagRepository:
         self.db_session.commit()
 
 
-@lru_cache
-def provide() -> TransactionTagRepository:
-    """Provide an instance of TransactionTagRepository."""
-    return TransactionTagRepository(get_db_session())
+def provide(db_session: Session | None = None) -> TransactionTagRepository:
+    """Provide an instance of TransactionTagRepository.
+
+    Args:
+        db_session: Optional database session to use.
+    """
+    session = db_session if db_session is not None else get_db_session()
+    return TransactionTagRepository(session)

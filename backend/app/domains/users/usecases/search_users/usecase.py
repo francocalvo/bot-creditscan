@@ -1,7 +1,5 @@
 """Use case for searching users by email."""
 
-from functools import lru_cache
-
 from app.domains.users.domain.models import UsersPublic
 from app.domains.users.domain.options import (
     SearchFilters,
@@ -96,11 +94,14 @@ class SearchUsersUseCase:
         return self.service.search(search_options)
 
 
-@lru_cache
-def provide() -> SearchUsersUseCase:
+def provide(service: UserService | None = None) -> SearchUsersUseCase:
     """Provide an instance of SearchUsersUseCase.
 
+    Args:
+        service: Optional user service to use.
+
     Returns:
-        SearchUsersUseCase: An instance of the use case with dependencies
+        SearchUsersUseCase: An instance of use case with dependencies
     """
-    return SearchUsersUseCase(provide_service())
+    svc = service if service is not None else provide_service()
+    return SearchUsersUseCase(svc)

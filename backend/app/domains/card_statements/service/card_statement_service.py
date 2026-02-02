@@ -1,7 +1,6 @@
 """Card statement service implementation."""
 
 import uuid
-from functools import lru_cache
 from typing import Any
 
 from app.domains.card_statements.domain.models import (
@@ -59,7 +58,13 @@ class CardStatementService:
         self.repository.delete(statement_id)
 
 
-@lru_cache
-def provide() -> CardStatementService:
-    """Provide an instance of CardStatementService."""
-    return CardStatementService(provide_repository())
+def provide(
+    repository: "CardStatementRepository | None" = None,
+) -> CardStatementService:
+    """Provide an instance of CardStatementService.
+
+    Args:
+        repository: Optional repository to use.
+    """
+    repo = repository if repository is not None else provide_repository()
+    return CardStatementService(repo)

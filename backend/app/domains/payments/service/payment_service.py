@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import uuid
-from functools import lru_cache
 from typing import Any
 
 from app.domains.card_statements.domain.models import CardStatementUpdate
@@ -111,12 +110,25 @@ class PaymentService:
         self._update_statement_payment_status(statement_id)
 
 
-@lru_cache
-def provide() -> PaymentService:
-    """Provide an instance of PaymentService."""
+def provide(
+    repository: PaymentRepository | None = None,
+    card_statement_repository: CardStatementRepository | None = None,
+) -> PaymentService:
+    """Provide an instance of PaymentService.
+
+    Args:
+        repository: Optional payment repository to use.
+        card_statement_repository: Optional card statement repository to use.
+    """
     from app.domains.card_statements.repository import (
         provide as provide_card_statement_repository,
     )
     from app.domains.payments.repository import provide as provide_repository
 
-    return PaymentService(provide_repository(), provide_card_statement_repository())
+    repo = repository if repository is not None else provide_repository()
+    card_repo = (
+        card_statement_repository
+        if card_statement_repository is not None
+        else provide_card_statement_repository()
+    )
+    return PaymentService(repo, card_repo)
