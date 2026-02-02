@@ -1,7 +1,6 @@
 """Delete tag rule endpoint."""
 
 import uuid
-from typing import Any
 
 from fastapi import APIRouter, status
 
@@ -15,7 +14,7 @@ router = APIRouter()
 def delete_tag_rule(
     current_user: CurrentUser,
     rule_id: uuid.UUID,
-) -> Any:
+) -> None:
     """Delete a tag rule.
 
     Users can only delete their own tag rules unless they are superusers.

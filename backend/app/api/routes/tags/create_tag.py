@@ -2,10 +2,10 @@
 
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 
 from app.api.deps import CurrentUser
-from app.domains.tags.domain.errors import InvalidTagDataError
+from app.domains.tags.domain.errors import DuplicateTagLabelError, InvalidTagDataError
 from app.domains.tags.domain.models import TagCreateIn, TagPublic
 from app.domains.tags.usecases.create_tag import provide as provide_create_tag
 
@@ -41,5 +41,7 @@ def create_tag(
     try:
         usecase = provide_create_tag()
         return usecase.execute(tag_data)
+    except DuplicateTagLabelError as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
     except InvalidTagDataError as e:
         raise HTTPException(status_code=400, detail=str(e))

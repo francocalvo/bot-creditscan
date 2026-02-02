@@ -199,20 +199,9 @@ class TagRuleUpdateIn(SQLModel):
         return v
 
     def to_update(self) -> TagRuleUpdate:
-        """Convert to TagRuleUpdate."""
-        return TagRuleUpdate(
-            name=self.name,
-            tag_id=self.tag_id,
-            enabled=self.enabled,
-            priority=self.priority,
-            payee_contains=self.payee_contains,
-            description_contains=self.description_contains,
-            payee_regex=self.payee_regex,
-            description_regex=self.description_regex,
-            amount_min=self.amount_min,
-            amount_max=self.amount_max,
-            currency=self.currency,
-        )
+        """Convert to TagRuleUpdate, preserving only set fields."""
+        data = self.model_dump(exclude_unset=True)
+        return TagRuleUpdate(**data)
 
 
 # For paginated lists

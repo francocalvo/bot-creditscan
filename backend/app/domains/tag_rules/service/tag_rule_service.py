@@ -19,12 +19,16 @@ from app.domains.tag_rules.domain.models import (
     TagRulesPublic,
     TagRuleUpdate,
 )
-from app.domains.tag_rules.repository import TagRuleRepository
-from app.domains.tag_rules.repository import provide as provide_tag_rule_repository
+from app.domains.tag_rules.repository import (
+    TagRuleRepository,
+    provide_tag_rule_repository,
+)
 from app.domains.tags.repository import TagRepository
 from app.domains.tags.repository import provide as provide_tag_repository
 from app.domains.transaction_tags.domain.errors import TransactionTagNotFoundError
-from app.domains.transaction_tags.repository import TransactionTagRepository
+from app.domains.transaction_tags.repository import (
+    TransactionTagRepository,
+)
 from app.domains.transaction_tags.repository import (
     provide as provide_transaction_tag_repository,
 )

@@ -17,3 +17,9 @@ class InvalidTagDataError(TagError):
     """Raised when tag data is invalid."""
 
     pass
+
+
+class DuplicateTagLabelError(TagError):
+    """Raised when a tag with the same label already exists for the user."""
+
+    pass

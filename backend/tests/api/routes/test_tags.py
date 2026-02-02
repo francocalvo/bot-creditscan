@@ -8,7 +8,7 @@ from app.core.config import settings
 
 
 def test_tag_label_uniqueness_per_user(
-    client: TestClient, _db: Session, normal_user_token_headers: dict[str, str]
+    client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     """Test that duplicate tag labels are not allowed for the same user."""
     # Create first tag
@@ -35,7 +35,10 @@ def test_tag_label_uniqueness_per_user(
 
 
 def test_tag_label_different_users_allowed(
-    client: TestClient, _db: Session, normal_user_token_headers: dict[str, str]
+    client: TestClient,
+    db: Session,  # noqa: ARG001
+    normal_user_token_headers: dict[str, str],
+    superuser_token_headers: dict[str, str],
 ) -> None:
     """Test that duplicate tag labels are allowed for different users."""
     # First user creates a tag
@@ -49,7 +52,7 @@ def test_tag_label_different_users_allowed(
     )
     assert response1.status_code == 201
 
-    # Create second user
+    # Create second user (needs superuser)
     user2_response = client.post(
         f"{settings.API_V1_STR}/users/",
         json={
@@ -57,6 +60,7 @@ def test_tag_label_different_users_allowed(
             "password": "password123",
             "full_name": "User Two",
         },
+        headers=superuser_token_headers,
     )
     assert user2_response.status_code == 200
 
@@ -82,7 +86,7 @@ def test_tag_label_different_users_allowed(
 
 
 def test_delete_tag_removes_transaction_tags(
-    client: TestClient, _db: Session, normal_user_token_headers: dict[str, str]
+    client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     """Test that deleting a tag removes transaction tag associations."""
     # Create a tag
@@ -111,7 +115,7 @@ def test_delete_tag_removes_transaction_tags(
 
 
 def test_delete_tag_removes_tag_rules(
-    client: TestClient, _db: Session, normal_user_token_headers: dict[str, str]
+    client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     """Test that deleting a tag removes associated tag rules."""
     # Create a tag

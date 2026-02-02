@@ -32,6 +32,14 @@ class TagRepository:
             raise TagNotFoundError(f"Tag with ID {tag_id} not found")
         return tag
 
+    def get_by_user_and_label(self, user_id: uuid.UUID, label: str) -> Tag | None:
+        """Get a tag by user ID and label.
+
+        Returns None if not found (for uniqueness checks).
+        """
+        query = select(Tag).where(Tag.user_id == user_id, Tag.label == label)
+        return self.db_session.exec(query).first()
+
     def list(
         self, skip: int = 0, limit: int = 100, filters: dict[str, Any] | None = None
     ) -> list[Tag]:

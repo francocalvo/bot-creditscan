@@ -67,6 +67,9 @@ ignore = [
     "B904",  # Allow raising exceptions without from e, for HTTPException
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["ARG001"]  # Ignore unused arguments in tests (fixtures)
+
 [tool.pyright]
 exclude = [
     ".venv",

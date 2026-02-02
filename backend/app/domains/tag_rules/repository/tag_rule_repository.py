@@ -1,5 +1,6 @@
 """Tag rule repository implementation."""
 
+import builtins
 import uuid
 from typing import Any
 
@@ -48,7 +49,7 @@ class TagRuleRepository:
 
     def list_applicable_for_user(
         self, user_id: uuid.UUID, enabled_only: bool = True
-    ) -> list[TagRule]:
+    ) -> builtins.list[TagRule]:
         """List applicable tag rules for a user, ordered by priority and created_at."""
         query = select(TagRule).where(TagRule.user_id == user_id)
 

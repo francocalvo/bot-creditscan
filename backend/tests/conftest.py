@@ -1,8 +1,6 @@
 from collections.abc import Generator
 
 import pytest
-from tests.utils.user import authentication_token_from_email
-from tests.utils.utils import get_superuser_token_headers
 from fastapi.testclient import TestClient
 from sqlalchemy.engine import Engine
 from sqlmodel import Session, SQLModel, create_engine, delete

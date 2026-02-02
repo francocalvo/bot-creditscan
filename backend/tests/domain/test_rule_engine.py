@@ -5,6 +5,7 @@ from datetime import datetime
 from decimal import Decimal
 
 import pytest
+from pydantic import ValidationError
 from sqlmodel import Session
 
 from app.domains.card_statements.domain.models import CardStatement
@@ -526,28 +527,24 @@ class TestRuleCreation:
         self, tag_rule_service: TagRuleService, tag: Tag, user: User
     ) -> None:
         """Test that rule with no conditions fails."""
-        rule = TagRuleCreate(
-            user_id=user.id,
-            tag_id=tag.tag_id,
-        )
-
         with pytest.raises(
-            ValueError, match="At least one match condition must be set"
+            ValidationError, match="At least one match condition must be set"
         ):
-            tag_rule_service.create_tag_rule(rule)
+            TagRuleCreate(
+                user_id=user.id,
+                tag_id=tag.tag_id,
+            )
 
     def test_rule_creation_invalid_regex_fails(
         self, tag_rule_service: TagRuleService, tag: Tag, user: User
     ) -> None:
         """Test that rule with invalid regex fails."""
-        rule = TagRuleCreate(
-            user_id=user.id,
-            tag_id=tag.tag_id,
-            payee_regex="[invalid(",  # Invalid regex
-        )
-
-        with pytest.raises(ValueError, match="Invalid regex pattern"):
-            tag_rule_service.create_tag_rule(rule)
+        with pytest.raises(ValidationError, match="Invalid regex pattern"):
+            TagRuleCreate(
+                user_id=user.id,
+                tag_id=tag.tag_id,
+                payee_regex="[invalid(",  # Invalid regex
+            )
 
     def test_rule_creation_wrong_user_fails(
         self, tag_rule_service: TagRuleService, tag: Tag, user: User, user2: User
