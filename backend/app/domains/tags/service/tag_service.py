@@ -3,6 +3,7 @@
 import uuid
 from typing import Any
 
+from app.domains.tags.domain.errors import DuplicateTagLabelError
 from app.domains.tags.domain.models import (
     TagCreate,
     TagPublic,
@@ -21,7 +22,20 @@ class TagService:
         self.repository = repository
 
     def create_tag(self, tag_data: TagCreate) -> TagPublic:
-        """Create a new tag."""
+        """Create a new tag.
+
+        Raises:
+            DuplicateTagLabelError: If a tag with the same label exists for user.
+        """
+        # Check for duplicate label
+        existing = self.repository.get_by_user_and_label(
+            tag_data.user_id, tag_data.label
+        )
+        if existing:
+            raise DuplicateTagLabelError(
+                f"Tag with label '{tag_data.label}' already exists for this user"
+            )
+
         tag = self.repository.create(tag_data)
         return TagPublic.model_validate(tag)
 
@@ -48,7 +62,17 @@ class TagService:
         return TagPublic.model_validate(tag)
 
     def delete_tag(self, tag_id: uuid.UUID) -> None:
-        """Delete a tag."""
+        """Delete a tag and its associated tag rules."""
+        # Import here to avoid circular imports
+        from app.domains.tag_rules.repository import provide_tag_rule_repository
+
+        # Delete associated tag rules first
+        tag_rule_repo = provide_tag_rule_repository()
+        rules = tag_rule_repo.list(filters={"tag_id": tag_id})
+        for rule in rules:
+            tag_rule_repo.delete(rule.id)
+
+        # Then delete the tag
         self.repository.delete(tag_id)
 
 
