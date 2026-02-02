@@ -1,7 +1,6 @@
 """User service implementation."""
 
 import uuid
-from functools import lru_cache
 
 from app.core.security import verify_password
 from app.domains.users.domain.models import (
@@ -138,11 +137,14 @@ class UserService:
         return None
 
 
-@lru_cache
-def provide() -> UserService:
+def provide(user_repository: UserRepository | None = None) -> UserService:
     """Provide an instance of UserService.
+
+    Args:
+        user_repository: Optional repository to use.
 
     Returns:
         UserService: An instance of UserService with a repository.
     """
-    return UserService(provide_repository())
+    repo = user_repository if user_repository is not None else provide_repository()
+    return UserService(repo)

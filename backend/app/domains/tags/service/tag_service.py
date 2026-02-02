@@ -1,7 +1,6 @@
 """Tag service implementation."""
 
 import uuid
-from functools import lru_cache
 from typing import Any
 
 from app.domains.tags.domain.models import (
@@ -53,7 +52,11 @@ class TagService:
         self.repository.delete(tag_id)
 
 
-@lru_cache
-def provide() -> TagService:
-    """Provide an instance of TagService."""
-    return TagService(provide_repository())
+def provide(repository: TagRepository | None = None) -> TagService:
+    """Provide an instance of TagService.
+
+    Args:
+        repository: Optional repository to use.
+    """
+    repo = repository if repository is not None else provide_repository()
+    return TagService(repo)

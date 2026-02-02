@@ -1,7 +1,6 @@
 """Card statement repository implementation."""
 
 import uuid
-from functools import lru_cache
 from typing import Any
 
 from sqlmodel import Session, func, select
@@ -118,7 +117,11 @@ class CardStatementRepository:
         self.db_session.commit()
 
 
-@lru_cache
-def provide() -> CardStatementRepository:
-    """Provide an instance of CardStatementRepository."""
-    return CardStatementRepository(get_db_session())
+def provide(db_session: Session | None = None) -> CardStatementRepository:
+    """Provide an instance of CardStatementRepository.
+
+    Args:
+        db_session: Optional database session to use.
+    """
+    session = db_session if db_session is not None else get_db_session()
+    return CardStatementRepository(session)
