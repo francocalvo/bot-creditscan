@@ -1,7 +1,7 @@
 """Tag rule repository implementation."""
 
 import uuid
-from typing import Any
+from typing import Any, List
 
 from sqlmodel import Session, func, select
 
@@ -34,7 +34,7 @@ class TagRuleRepository:
 
     def list(
         self, skip: int = 0, limit: int = 100, filters: dict[str, Any] | None = None
-    ) -> list[TagRule]:
+    ) -> List[TagRule]:
         """List tag rules with pagination and filtering."""
         query = select(TagRule)
 
@@ -48,7 +48,7 @@ class TagRuleRepository:
 
     def list_applicable_for_user(
         self, user_id: uuid.UUID, enabled_only: bool = True
-    ) -> list[TagRule]:
+    ) -> List[TagRule]:
         """List applicable tag rules for a user, ordered by priority and created_at."""
         query = select(TagRule).where(TagRule.user_id == user_id)
 
@@ -101,6 +101,11 @@ class TagRuleRepository:
         self.db_session.commit()
 
 
-def provide() -> TagRuleRepository:
-    """Provide an instance of TagRuleRepository."""
-    return TagRuleRepository(get_db_session())
+def provide(db_session: Session | None = None) -> TagRuleRepository:
+    """Provide an instance of TagRuleRepository.
+
+    Args:
+        db_session: Optional database session to use.
+    """
+    session = db_session if db_session is not None else get_db_session()
+    return TagRuleRepository(session)

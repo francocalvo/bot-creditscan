@@ -7,7 +7,7 @@ from app.core.config import settings
 
 
 def test_create_tag_rule(
-    client: TestClient, _db: Session, normal_user_token_headers: dict[str, str]
+    client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     """Test creating a tag rule."""
     # First create a tag
@@ -49,7 +49,7 @@ def test_create_tag_rule(
 
 
 def test_create_tag_rule_no_conditions_fails(
-    client: TestClient, _db: Session, normal_user_token_headers: dict[str, str]
+    client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     """Test creating a tag rule with no conditions fails."""
     # First create a tag
@@ -79,7 +79,7 @@ def test_create_tag_rule_no_conditions_fails(
 
 
 def test_create_tag_rule_invalid_regex_fails(
-    client: TestClient, _db: Session, normal_user_token_headers: dict[str, str]
+    client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     """Test creating a tag rule with invalid regex fails."""
     # First create a tag
@@ -109,7 +109,7 @@ def test_create_tag_rule_invalid_regex_fails(
 
 
 def test_list_tag_rules(
-    client: TestClient, _db: Session, normal_user_token_headers: dict[str, str]
+    client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     """Test listing tag rules."""
     # First create a tag
@@ -152,7 +152,7 @@ def test_list_tag_rules(
 
 
 def test_get_tag_rule(
-    client: TestClient, _db: Session, normal_user_token_headers: dict[str, str]
+    client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     """Test getting a specific tag rule."""
     # First create a tag
@@ -194,10 +194,10 @@ def test_get_tag_rule(
 
 
 def test_get_tag_rule_unauthorized(
-    client: TestClient, _db: Session, normal_user_token_headers: dict[str, str]
+    client: TestClient, db: Session, normal_user_token_headers: dict[str, str], superuser_token_headers: dict[str, str]
 ) -> None:
     """Test that users can't access other users' tag rules."""
-    # Create a second user
+    # Create a second user (needs superuser to create users)
     user2_response = client.post(
         f"{settings.API_V1_STR}/users/",
         json={
@@ -205,6 +205,7 @@ def test_get_tag_rule_unauthorized(
             "password": "password123",
             "full_name": "User Two",
         },
+        headers=superuser_token_headers,
     )
     assert user2_response.status_code == 200
 
@@ -255,7 +256,7 @@ def test_get_tag_rule_unauthorized(
 
 
 def test_update_tag_rule(
-    client: TestClient, _db: Session, normal_user_token_headers: dict[str, str]
+    client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     """Test updating a tag rule."""
     # First create a tag
@@ -304,7 +305,7 @@ def test_update_tag_rule(
 
 
 def test_delete_tag_rule(
-    client: TestClient, _db: Session, normal_user_token_headers: dict[str, str]
+    client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     """Test deleting a tag rule."""
     # First create a tag
@@ -350,7 +351,7 @@ def test_delete_tag_rule(
 
 
 def test_apply_rules_dry_run(
-    client: TestClient, _db: Session, normal_user_token_headers: dict[str, str]
+    client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     """Test applying rules in dry run mode."""
     # Setup: Create a credit card, statement, and transaction
@@ -384,7 +385,7 @@ def test_apply_rules_dry_run(
 
 
 def test_list_tag_rules_with_filters(
-    client: TestClient, _db: Session, normal_user_token_headers: dict[str, str]
+    client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     """Test listing tag rules with filters."""
     # First create a tag
